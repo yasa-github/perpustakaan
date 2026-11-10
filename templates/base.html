@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Pustaka Hijau{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-emerald-50/40 text-slate-800 min-h-screen flex flex-col font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="{{ url_for('katalog') }}" class="flex items-center gap-2 font-bold text-xl tracking-tight text-white hover:text-emerald-100 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Pustaka Hijau
+        </a>
+
+        <div class="flex items-center gap-4 text-sm font-medium">
+          <a href="{{ url_for('katalog') }}" class="hover:bg-emerald-800 px-3 py-2 rounded-lg transition">Katalog</a>
+          {% if session.get('user_id') %}
+            {% if session.get('role') == 'peminjam' %}
+              <a href="{{ url_for('riwayat_peminjaman') }}" class="hover:bg-emerald-800 px-3 py-2 rounded-lg transition">Buku Saya</a>
+            {% elif session.get('role') == 'pustakawan' %}
+              <a href="{{ url_for('admin_dashboard') }}" class="hover:bg-emerald-800 px-3 py-2 rounded-lg transition">Kelola Perpustakaan</a>
+            {% endif %}
+            <span class="text-emerald-200">|</span>
+            <span class="text-emerald-100 font-semibold">{{ session.get('full_name') }}</span>
+            <a href="{{ url_for('logout') }}" class="bg-emerald-900 hover:bg-emerald-950 px-3 py-2 rounded-lg transition">Keluar</a>
+          {% else %}
+            <a href="{{ url_for('login') }}" class="hover:bg-emerald-800 px-3 py-2 rounded-lg transition">Masuk</a>
+            <a href="{{ url_for('register') }}" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3.5 py-2 rounded-lg font-semibold shadow transition">Daftar</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-3 mb-6">
+          {% for category, message in messages %}
+            {% set color = 'emerald' if category == 'success' else 'red' if category == 'danger' else 'amber' if category == 'warning' else 'blue' %}
+            <div class="p-4 rounded-xl border border-{{ color }}-300 bg-{{ color }}-50 text-{{ color }}-800 text-sm shadow-sm flex items-center justify-between">
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-white border-t border-emerald-100 py-6 text-center text-xs text-slate-500">
+    &copy; 2026 Pustaka Hijau. Sistem Informasi Perpustakaan Terpadu.
+  </footer>
+</body>
+</html>
