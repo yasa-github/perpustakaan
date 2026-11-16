@@ -1,33 +1,287 @@
-{% extends "base.html" %}
-{% block title %}Masuk - Pustaka Hijau{% endblock %}
-{% block content %}
-<div class="max-w-md mx-auto mt-8 bg-white p-8 rounded-2xl shadow-sm border border-emerald-100">
-  <h2 class="text-2xl font-bold text-emerald-900 mb-2 text-center">Masuk ke Akun</h2>
-  <p class="text-sm text-slate-500 mb-6 text-center">Akses peminjaman buku dan kelola data perpustakaan</p>
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masuk — Pustaka Hijau</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #050a0e;
+      overflow-x: hidden;
+    }
 
-  <form method="POST" action="{{ url_for('login') }}" class="space-y-4">
-    <div>
-      <label class="block text-sm font-semibold text-slate-700 mb-1">Username</label>
-      <input type="text" name="username" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+    /* Latar Belakang Grid Futuristik */
+    .cyber-grid {
+      background-size: 44px 44px;
+      background-image:
+        linear-gradient(to right, rgba(16, 185, 129, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(16, 185, 129, 0.06) 1px, transparent 1px);
+      mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    }
+
+    /* Animasi Orb Cahaya Mengambang */
+    @keyframes floatSlow {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(20px, -25px) scale(1.06); }
+    }
+    .orb-1 { animation: floatSlow 9s ease-in-out infinite; }
+    .orb-2 { animation: floatSlow 12s ease-in-out infinite reverse; }
+
+    /* Efek Glassmorphism & Spotlight */
+    .glass-card {
+      background: rgba(13, 22, 28, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(52, 211, 153, 0.16);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .spotlight-overlay {
+      background: radial-gradient(
+        420px circle at var(--x, 50%) var(--y, 50%),
+        rgba(16, 185, 129, 0.12),
+        transparent 70%
+      );
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col justify-between relative selection:bg-emerald-500/30 selection:text-emerald-200">
+
+  <!-- Background Effects -->
+  <div class="fixed inset-0 cyber-grid pointer-events-none z-0"></div>
+  <div class="fixed top-[-10%] left-[15%] w-[380px] h-[380px] rounded-full bg-emerald-500/15 blur-[120px] pointer-events-none orb-1 z-0"></div>
+  <div class="fixed bottom-[-10%] right-[12%] w-[420px] h-[420px] rounded-full bg-teal-400/10 blur-[130px] pointer-events-none orb-2 z-0"></div>
+
+  <!-- Navbar Minimalis Transparan -->
+  <header class="relative z-10 border-b border-white/5 bg-slate-950/40 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="{{ url_for('index') if 'index' in view_functions else '/' }}" class="flex items-center gap-3 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 p-[1px] shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-400/40 transition-all">
+          <div class="w-full h-full bg-slate-950 rounded-[11px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+        </div>
+        <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-emerald-100 to-emerald-400 bg-clip-text text-transparent">
+          Pustaka Hijau
+        </span>
+      </a>
+
+      <nav class="flex items-center gap-6 text-sm font-medium">
+        <a href="/" class="text-slate-400 hover:text-emerald-300 transition-colors">Katalog</a>
+        <a href="/login" class="text-emerald-400 font-semibold">Masuk</a>
+        <a href="/register" class="px-4 py-2 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500 hover:text-slate-950 hover:font-semibold transition-all duration-300">
+          Daftar
+        </a>
+      </nav>
     </div>
-    <div>
-      <label class="block text-sm font-semibold text-slate-700 mb-1">Kata Sandi</label>
-      <input type="password" name="password" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+  </header>
+
+  <!-- Main Card Container -->
+  <main class="relative z-10 flex-1 flex items-center justify-center px-4 py-12">
+    <div id="loginCard" class="glass-card relative w-full max-w-[430px] rounded-2xl p-8 overflow-hidden transition-transform duration-300">
+      <!-- Interactive Spotlight Layer -->
+      <div id="spotlight" class="spotlight-overlay absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300"></div>
+
+      <!-- Top Badge -->
+      <div class="relative z-10 flex justify-center mb-5">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+          Digital Library System
+        </span>
+      </div>
+
+      <!-- Heading -->
+      <div class="relative z-10 text-center mb-7">
+        <h1 class="text-2xl font-bold tracking-tight text-white">Masuk ke Akun</h1>
+        <p class="text-sm text-slate-400 mt-1.5">Akses peminjaman buku & manajemen data pustaka</p>
+      </div>
+
+      <!-- Flash Messages (Jika ada pesan error/sukses dari Flask) -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="relative z-10 mb-5 space-y-2">
+            {% for category, message in messages %}
+              <div class="px-4 py-3 rounded-xl text-xs font-medium border flex items-center gap-2.5
+                {% if category == 'danger' or category == 'error' %}
+                  bg-rose-500/10 border-rose-500/30 text-rose-300
+                {% else %}
+                  bg-emerald-500/10 border-emerald-500/30 text-emerald-300
+                {% endif %}">
+                <span class="w-2 h-2 rounded-full {% if category == 'danger' or category == 'error' %}bg-rose-400{% else %}bg-emerald-400{% endif %}"></span>
+                <span>{{ message }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Form Login -->
+      <form id="loginForm" method="POST" action="/login" class="relative z-10 space-y-5">
+        <!-- Username -->
+        <div class="space-y-1.5">
+          <label for="username" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Username</label>
+          <div class="relative group">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500 group-focus-within:text-emerald-400 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              required
+              autocomplete="username"
+              placeholder="Masukkan username"
+              class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400/70 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-1.5">
+          <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Kata Sandi</label>
+          <div class="relative group">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500 group-focus-within:text-emerald-400 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              autocomplete="current-password"
+              placeholder="••••••••"
+              class="w-full pl-10 pr-11 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400/70 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+            />
+            <button
+              type="button"
+              id="togglePassword"
+              aria-label="Tampilkan sandi"
+              class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-emerald-300 transition-colors"
+            >
+              <svg id="eyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          id="submitBtn"
+          class="w-full py-3 px-4 rounded-xl font-semibold text-sm text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 hover:brightness-110 active:scale-[0.99] shadow-lg shadow-emerald-500/25 transition-all duration-200 flex items-center justify-center gap-2"
+        >
+          <span id="btnText">Masuk Sekarang</span>
+          <svg id="btnArrow" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+          <svg id="btnSpinner" class="hidden w-4 h-4 animate-spin text-slate-950" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Register Link -->
+      <p class="relative z-10 text-center text-xs text-slate-400 mt-6">
+        Belum punya akun peminjam?
+        <a href="/register" class="text-emerald-400 font-semibold hover:text-emerald-300 underline decoration-emerald-500/40 underline-offset-4 transition-colors">
+          Daftar sekarang
+        </a>
+      </p>
+
+      <!-- Interactive Demo Quick-Fill Chips -->
+      <div class="relative z-10 mt-6 pt-5 border-t border-white/10">
+        <div class="flex items-center justify-between mb-2.5">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Akses Cepat Demo</span>
+          <span class="text-[10px] text-emerald-400/80">Klik untuk isi otomatis</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <button
+            type="button"
+            onclick="fillDemo('pustakawan', 'admin123')"
+            class="group text-left p-2.5 rounded-xl bg-white/[0.03] hover:bg-emerald-500/10 border border-white/10 hover:border-emerald-500/40 transition-all"
+          >
+            <div class="text-[11px] font-semibold text-emerald-300 group-hover:text-emerald-200">Pustakawan</div>
+            <div class="text-[10px] text-slate-400 font-mono mt-0.5">pustakawan</div>
+          </button>
+
+          <button
+            type="button"
+            onclick="fillDemo('peminjam', 'user123')"
+            class="group text-left p-2.5 rounded-xl bg-white/[0.03] hover:bg-teal-500/10 border border-white/10 hover:border-teal-500/40 transition-all"
+          >
+            <div class="text-[11px] font-semibold text-teal-300 group-hover:text-teal-200">Peminjam</div>
+            <div class="text-[10px] text-slate-400 font-mono mt-0.5">peminjam</div>
+          </button>
+        </div>
+      </div>
     </div>
-    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl transition shadow mt-2">
-      Masuk
-    </button>
-  </form>
+  </main>
 
-  <p class="mt-6 text-center text-xs text-slate-600">
-    Belum punya akun peminjam?
-    <a href="{{ url_for('register') }}" class="text-emerald-700 font-semibold hover:underline">Daftar sekarang</a>
-  </p>
+  <footer class="relative z-10 text-center py-4 text-[11px] text-slate-500">
+    &copy; 2026 Pustaka Hijau &bull; Sistem Informasi Perpustakaan Digital
+  </footer>
 
-  <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-1">
-    <p class="font-semibold">Akun Bawaan Demo:</p>
-    <p>• Pustakawan: <span class="bg-slate-100 px-1 py-0.5 rounded font-mono">pustakawan</span> / <span class="bg-slate-100 px-1 py-0.5 rounded font-mono">admin123</span></p>
-    <p>• Peminjam: <span class="bg-slate-100 px-1 py-0.5 rounded font-mono">peminjam</span> / <span class="bg-slate-100 px-1 py-0.5 rounded font-mono">user123</span></p>
-  </div>
-</div>
-{% endblock %}
+  <!-- Interactive Scripts -->
+  <script>
+    // 1. Efek Spotlight mengikuti kursor di dalam card
+    const card = document.getElementById('loginCard');
+    const spotlight = document.getElementById('spotlight');
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      spotlight.style.setProperty('--x', `${x}px`);
+      spotlight.style.setProperty('--y', `${y}px`);
+      spotlight.style.opacity = '1';
+    });
+
+    card.addEventListener('mouseleave', () => {
+      spotlight.style.opacity = '0';
+    });
+
+    // 2. Toggle Show / Hide Password
+    const toggleBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      toggleBtn.classList.toggle('text-emerald-400', isPassword);
+    });
+
+    // 3. Auto-fill akun demo dengan efek highlight
+    function fillDemo(user, pass) {
+      const uInput = document.getElementById('username');
+      const pInput = document.getElementById('password');
+      uInput.value = user;
+      pInput.value = pass;
+
+      [uInput, pInput].forEach(el => {
+        el.classList.add('ring-2', 'ring-emerald-400/50', 'border-emerald-400');
+        setTimeout(() => {
+          el.classList.remove('ring-2', 'ring-emerald-400/50', 'border-emerald-400');
+        }, 650);
+      });
+    }
+
+    // 4. Animasi loading saat submit form
+    document.getElementById('loginForm').addEventListener('submit', () => {
+      document.getElementById('btnText').textContent = 'Memverifikasi...';
+      document.getElementById('btnArrow').classList.add('hidden');
+      document.getElementById('btnSpinner').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
