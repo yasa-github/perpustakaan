@@ -38,13 +38,16 @@ def login():
         conn.close()
 
         if user and check_password_hash(user['password'], password):
-            session['user_id'] = user['id']
-            session['username'] = user['username']
-            session['full_name'] = user['full_name']
-            session['role'] = user['role']
-            flash(f'Selamat datang kembali, {user["full_name"]}!', 'success')
-            return redirect(url_for('admin_dashboard' if user['role'] == 'pustakawan' else 'katalog'))
+            user_data = dict(user)
+            nama_tampil = user_data.get('full_name') or user_data.get('nama_lengkap') or user_data.get('nama') or \
+                          user_data['username']
 
+            session['user_id'] = user_data['id']
+            session['username'] = user_data['username']
+            session['full_name'] = nama_tampil
+            session['role'] = user_data['role']
+            flash(f'Selamat datang kembali, {nama_tampil}!', 'success')
+            return redirect(url_for('admin_dashboard' if user_data['role'] == 'pustakawan' else 'katalog'))
         flash('Username atau kata sandi tidak valid.', 'danger')
     return render_template('login.html')
 
